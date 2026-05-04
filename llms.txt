@@ -1,0 +1,40 @@
+# GribStream MCP
+
+GribStream MCP is a hosted remote Model Context Protocol server for weather forecast data. It helps AI tools discover GribStream datasets, inspect exact forecast variables and levels, validate request bodies, and generate runnable GribStream Weather API requests.
+
+Endpoint: https://gribstream.com/mcp
+
+Transport: Streamable HTTP
+
+Homepage: https://gribstream.com/mcp
+
+AI docs: https://gribstream.com/ai
+
+OpenAPI: https://gribstream.com/docs/openapi.yaml
+
+Icon: https://gribstream.com/gribstream_small.png
+
+The hosted MCP server is read-only. It does not execute live /timeseries or /runs data queries. Generated GribStream API requests may require GRIBSTREAM_API_TOKEN when executed outside MCP.
+
+Key tools:
+
+- gribstream_list_datasets
+- gribstream_get_dataset
+- gribstream_list_parameters
+- gribstream_get_parameter
+- gribstream_list_shared_parameters
+- gribstream_resolve_shared_parameter
+- gribstream_get_expression_reference
+- gribstream_build_timeseries_request
+- gribstream_build_runs_request
+- gribstream_validate_request
+
+Prompts:
+
+- build_gribstream_api_request
+- build_gfs_forecast_request
+- build_historical_forecast_request
+- create_grid_request
+- compare_forecast_runs
+- choose_weather_dataset
+- find_weather_variable

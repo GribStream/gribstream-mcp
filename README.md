@@ -2,7 +2,7 @@
 
 GribStream MCP is a hosted Model Context Protocol server for weather forecast data.
 
-It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries through OAuth.
+It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries after OAuth authorization.
 
 Hosted MCP endpoint:
 
@@ -23,7 +23,7 @@ Use GribStream MCP when you want an AI tool to:
 - Execute live `/timeseries` or `/runs` queries after OAuth authorization.
 - Generate a copy-pasteable `curl` command for the GribStream Weather API.
 
-The hosted MCP server is read-only with respect to GribStream account data. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
+The hosted MCP server exposes discovery, selector lookup, request building, and validation tools before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
 
 ## Connect
 
@@ -62,7 +62,7 @@ Some clients require an explicit transport field:
 
 ## OAuth
 
-Most MCP clients should discover OAuth from the hosted endpoint automatically. If a client asks for manual OAuth 2.0 fields, use:
+OAuth is needed for live query tools. Most MCP clients should discover OAuth from the hosted endpoint automatically, either during connector setup or when the client requests authenticated tools. If a client asks for manual OAuth 2.0 fields, use:
 
 ```text
 Authorization URL: https://gribstream.com/authorize
@@ -84,7 +84,7 @@ The OAuth client is public and uses PKCE with `token_endpoint_auth_method` set t
 
 ## Capabilities
 
-Hosted tools:
+Public read-only tools:
 
 - `gribstream_list_datasets`
 - `gribstream_get_dataset`
@@ -95,9 +95,12 @@ Hosted tools:
 - `gribstream_get_expression_reference`
 - `gribstream_build_timeseries_request`
 - `gribstream_build_runs_request`
+- `gribstream_validate_request`
+
+OAuth live query tools:
+
 - `gribstream_query_timeseries`
 - `gribstream_query_runs`
-- `gribstream_validate_request`
 
 Hosted prompts:
 

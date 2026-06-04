@@ -10,7 +10,7 @@ The server uses remote MCP over Streamable HTTP.
 
 ## Authentication
 
-The hosted MCP endpoint uses OAuth for MCP JSON-RPC requests.
+The hosted MCP endpoint allows read-only discovery, selector lookup, request building, and validation before OAuth. Live `/timeseries` and `/runs` query tools require OAuth.
 
 Most clients should discover the OAuth flow automatically from the `WWW-Authenticate` challenge and the public metadata endpoints. If your client asks for manual OAuth 2.0 configuration, use:
 
@@ -23,7 +23,7 @@ Scopes: leave empty
 Resource or audience, if requested: https://gribstream.com/mcp
 ```
 
-The OAuth flow asks you to sign in to GribStream and select an active API token. The MCP client receives MCP OAuth tokens; it does not receive your raw GribStream API token.
+The OAuth flow asks you to sign in to GribStream and select an active API token for live MCP queries. The MCP client receives MCP OAuth tokens; it does not receive your raw GribStream API token.
 
 If a setup form requires a non-empty client secret, it is asking for a confidential-client OAuth flow. GribStream MCP uses a public OAuth client with PKCE and `token_endpoint_auth_method` set to `none`.
 

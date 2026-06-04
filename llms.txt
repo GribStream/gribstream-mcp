@@ -1,6 +1,6 @@
 # GribStream MCP
 
-GribStream MCP is a hosted remote Model Context Protocol server for weather forecast data. It helps AI tools discover GribStream datasets, inspect exact forecast variables and levels, validate request bodies, generate runnable GribStream Weather API requests, and run live read-only weather queries through OAuth.
+GribStream MCP is a hosted remote Model Context Protocol server for weather forecast data. It helps AI tools discover GribStream datasets, inspect exact forecast variables and levels, validate request bodies, generate runnable GribStream Weather API requests, and run live read-only weather queries after OAuth authorization.
 
 Endpoint: https://gribstream.com/mcp
 
@@ -25,9 +25,9 @@ OAuth:
 - Protected resource metadata: https://gribstream.com/.well-known/oauth-protected-resource/mcp
 - Authorization server metadata: https://gribstream.com/.well-known/oauth-authorization-server
 
-The hosted MCP server uses OAuth for MCP JSON-RPC requests. During authorization, GribStream asks the user to sign in and select an active GribStream API token. The MCP client receives MCP OAuth tokens, not the raw GribStream API token. Queries are read-only and count against the selected API token quota.
+The hosted MCP server exposes discovery, selector lookup, request-building, and validation tools before OAuth. Live /timeseries and /runs query tools require OAuth. During authorization, GribStream asks the user to sign in and select an active GribStream API token. The MCP client receives MCP OAuth tokens, not the raw GribStream API token. Queries are read-only and count against the selected API token quota.
 
-Key tools:
+Public read-only tools:
 
 - gribstream_list_datasets
 - gribstream_get_dataset
@@ -38,9 +38,12 @@ Key tools:
 - gribstream_get_expression_reference
 - gribstream_build_timeseries_request
 - gribstream_build_runs_request
+- gribstream_validate_request
+
+OAuth live query tools:
+
 - gribstream_query_timeseries
 - gribstream_query_runs
-- gribstream_validate_request
 
 Prompts:
 

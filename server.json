@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.gribstream/mcp",
   "title": "GribStream MCP",
-  "description": "OAuth-protected weather data discovery, request validation, and live GribStream queries.",
-  "version": "1.1.0",
+  "description": "Weather discovery, request validation, and OAuth-protected live GribStream queries.",
+  "version": "1.1.1",
   "websiteUrl": "https://gribstream.com/mcp",
   "icons": [
     {

@@ -2,6 +2,11 @@
 
 All notable listing and metadata changes for GribStream MCP are tracked here.
 
+## 1.1.1 - 2026-06-04
+
+- Clarified that discovery, request-building, and validation tools are available before OAuth.
+- Clarified that OAuth is required for live `/timeseries` and `/runs` query tools.
+
 ## 1.1.0 - 2026-06-04
 
 - Documented OAuth setup for the hosted MCP endpoint, including manual OAuth 2.0 fields for clients that do not fully auto-discover metadata.

@@ -73,7 +73,7 @@ Use GribStream MCP to find the best dataset for short-range precipitation foreca
 
 ## API Token Note
 
-The hosted MCP server uses OAuth. During authorization, GribStream asks you to select one active GribStream API token for the MCP connection. The raw API token is not shown to the MCP client.
+The hosted MCP server exposes discovery, request-building, and validation tools before OAuth. Live query tools use OAuth. During authorization, GribStream asks you to select one active GribStream API token for the MCP connection. The raw API token is not shown to the MCP client.
 
 When you run a generated GribStream API request outside MCP, set:
 

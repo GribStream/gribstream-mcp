@@ -19,6 +19,7 @@ Expected MCP workflow:
 3. Confirm selector level `2 m above ground`.
 4. Use `gribstream_build_timeseries_request`.
 5. Use `gribstream_query_timeseries` to run the authenticated query, or return runnable `curl` with a `GRIBSTREAM_API_TOKEN` placeholder.
+6. If saving the MCP CSV or NDJSON result, use `structuredContent.suggested_filename` instead of a generic filename.
 
 Representative request body:
 
@@ -87,6 +88,8 @@ Expected MCP workflow:
 2. Treat `timesList`, `forecastedFrom`, and `forecastedUntil` as UTC model run times.
 3. Use `gribstream_build_runs_request`.
 4. Explain that `/runs` is for model-run history and forecast aging workflows.
+5. When comparing saved outputs, keep each MCP result in a separate file using `structuredContent.suggested_filename`.
+6. Sort rows by `forecasted_at` and `forecasted_time` before comparing or plotting.
 
 ## Choose a Dataset
 

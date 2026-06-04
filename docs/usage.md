@@ -10,7 +10,7 @@ The server uses remote MCP over Streamable HTTP.
 
 ## Authentication
 
-The hosted MCP endpoint allows read-only discovery, selector lookup, request building, and validation before OAuth. Live `/timeseries` and `/runs` query tools require OAuth.
+The hosted MCP endpoint allows read-only discovery, selector lookup, request building, and validation before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. Tool descriptions start with either `NO AUTH / PUBLIC / READ-ONLY` or `AUTH REQUIRED / DATA QUERY`.
 
 Most clients should discover the OAuth flow automatically from the `WWW-Authenticate` challenge and the public metadata endpoints. If your client asks for manual OAuth 2.0 configuration, use:
 
@@ -49,6 +49,19 @@ A typical AI workflow is:
 4. Build a `/timeseries` or `/runs` request.
 5. Validate the request.
 6. Run the query through authenticated MCP, or run the generated `curl` command with your API token.
+
+## Saving Query Results
+
+Authenticated live query tools return CSV and NDJSON as typed inline MCP resources. They also include metadata in `structuredContent`.
+
+When saving a live query result, use `structuredContent.suggested_filename` instead of a generic name such as `timeseries.csv` or `runs.csv`. Suggested filenames include the dataset, endpoint, request hints, and a short result hash, so repeated queries or comparisons across models do not overwrite earlier files.
+
+For comparison or plotting workflows:
+
+1. Save each MCP result with its own `suggested_filename`.
+2. Sort `/timeseries` rows by `forecasted_time`.
+3. Sort `/runs` rows by `forecasted_at` and `forecasted_time`.
+4. Compare only aligned timestamps or model-run timestamps.
 
 ## Endpoint Choice
 

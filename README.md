@@ -23,7 +23,7 @@ Use GribStream MCP when you want an AI tool to:
 - Execute live `/timeseries` or `/runs` queries after OAuth authorization.
 - Generate a copy-pasteable `curl` command for the GribStream Weather API.
 
-The hosted MCP server exposes discovery, selector lookup, request building, and validation tools before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
+The hosted MCP server exposes discovery, selector lookup, request building, and validation tools before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. Tool descriptions begin with either `NO AUTH / PUBLIC / READ-ONLY` or `AUTH REQUIRED / DATA QUERY` so AI clients can route metadata tasks and live data-query tasks correctly. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
 
 ## Connect
 
@@ -101,6 +101,13 @@ OAuth live query tools:
 
 - `gribstream_query_timeseries`
 - `gribstream_query_runs`
+
+Live query output:
+
+- CSV and NDJSON results are returned as typed inline MCP resources, not just plain prose.
+- `structuredContent` includes `content_type`, `rows`, `bytes`, `columns`, `schema`, `preview`, and row-ordering guidance.
+- Tabular results include `suggested_filename`, `request_hash`, `response_hash`, and `result_hash`. Use `suggested_filename` when saving multiple query results, especially for comparisons, to avoid overwriting earlier CSV or NDJSON files.
+- Rows are streamed from parallel extraction and are not guaranteed to be sorted. Sort by `forecasted_time` for `/timeseries`, and by `forecasted_at` plus `forecasted_time` for `/runs`, before plotting or comparing time series.
 
 Hosted prompts:
 

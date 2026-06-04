@@ -2,6 +2,12 @@
 
 All notable listing and metadata changes for GribStream MCP are tracked here.
 
+## 1.1.2 - 2026-06-04
+
+- Documented explicit tool auth labels: `NO AUTH / PUBLIC / READ-ONLY` and `AUTH REQUIRED / DATA QUERY`.
+- Documented typed inline CSV/NDJSON resources and `structuredContent.suggested_filename` for saving multiple query results without overwriting earlier files.
+- Updated registry metadata description for typed tabular result metadata.
+
 ## 1.1.1 - 2026-06-04
 
 - Clarified that discovery, request-building, and validation tools are available before OAuth.

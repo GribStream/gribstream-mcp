@@ -2,7 +2,7 @@
 
 GribStream MCP is a hosted Model Context Protocol server for weather forecast data.
 
-It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, and build runnable GribStream Weather API requests for GFS, ECMWF IFS, NBM, HRRR, and other models.
+It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries through OAuth.
 
 Hosted MCP endpoint:
 
@@ -20,17 +20,20 @@ Use GribStream MCP when you want an AI tool to:
 - Build a `/timeseries` request for values by valid time.
 - Build a `/runs` request to compare forecasts across model runs.
 - Validate a GribStream API request before running it.
+- Execute live `/timeseries` or `/runs` queries after OAuth authorization.
 - Generate a copy-pasteable `curl` command for the GribStream Weather API.
 
-The hosted MCP server is read-only. It builds and validates requests, but it does not execute live `/timeseries` or `/runs` data queries. Generated API requests may require a GribStream API token when you run them outside MCP.
+The hosted MCP server is read-only with respect to GribStream account data. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
 
 ## Connect
 
-Use the hosted endpoint in any MCP client that supports remote Streamable HTTP:
+Use the hosted endpoint exactly as shown in any MCP client that supports remote Streamable HTTP:
 
 ```text
 https://gribstream.com/mcp
 ```
+
+Do not include trailing punctuation in the URL.
 
 Generic configuration shape:
 
@@ -57,6 +60,28 @@ Some clients require an explicit transport field:
 }
 ```
 
+## OAuth
+
+Most MCP clients should discover OAuth from the hosted endpoint automatically. If a client asks for manual OAuth 2.0 fields, use:
+
+```text
+Authorization URL: https://gribstream.com/authorize
+Token URL: https://gribstream.com/token
+Client ID: gribstream-mcp-public
+Client Secret: leave empty; do not enter a value
+Scopes: leave empty
+Resource or audience, if requested: https://gribstream.com/mcp
+```
+
+OAuth discovery endpoints:
+
+```text
+https://gribstream.com/.well-known/oauth-protected-resource/mcp
+https://gribstream.com/.well-known/oauth-authorization-server
+```
+
+The OAuth client is public and uses PKCE with `token_endpoint_auth_method` set to `none`. Native desktop clients may use loopback redirect URIs such as `http://localhost:{port}/...`, `http://127.0.0.1:{port}/...`, or `http://[::1]:{port}/...`. A setup form that requires a non-empty client secret is asking for a confidential-client flow and is not compatible with this public MCP OAuth flow.
+
 ## Capabilities
 
 Hosted tools:
@@ -70,6 +95,8 @@ Hosted tools:
 - `gribstream_get_expression_reference`
 - `gribstream_build_timeseries_request`
 - `gribstream_build_runs_request`
+- `gribstream_query_timeseries`
+- `gribstream_query_runs`
 - `gribstream_validate_request`
 
 Hosted prompts:
@@ -102,6 +129,12 @@ After connecting GribStream MCP to an AI tool, ask:
 
 ```text
 Use GribStream MCP to build a GFS 2m temperature timeseries request for Houston for tomorrow at 12:00 UTC. Validate the request and return a runnable curl command.
+```
+
+If your client has completed OAuth, you can also ask it to run the query:
+
+```text
+Use GribStream MCP to run a GFS 2m temperature timeseries query for Houston for tomorrow at 12:00 UTC and return CSV.
 ```
 
 Or:

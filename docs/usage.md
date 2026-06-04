@@ -10,9 +10,24 @@ The server uses remote MCP over Streamable HTTP.
 
 ## Authentication
 
-The MCP connection does not require authentication.
+The hosted MCP endpoint uses OAuth for MCP JSON-RPC requests.
 
-The server builds and validates GribStream API requests. When you run a generated API request outside MCP, set a GribStream API token:
+Most clients should discover the OAuth flow automatically from the `WWW-Authenticate` challenge and the public metadata endpoints. If your client asks for manual OAuth 2.0 configuration, use:
+
+```text
+Authorization URL: https://gribstream.com/authorize
+Token URL: https://gribstream.com/token
+Client ID: gribstream-mcp-public
+Client Secret: leave empty; do not enter a value
+Scopes: leave empty
+Resource or audience, if requested: https://gribstream.com/mcp
+```
+
+The OAuth flow asks you to sign in to GribStream and select an active API token. The MCP client receives MCP OAuth tokens; it does not receive your raw GribStream API token.
+
+If a setup form requires a non-empty client secret, it is asking for a confidential-client OAuth flow. GribStream MCP uses a public OAuth client with PKCE and `token_endpoint_auth_method` set to `none`.
+
+If you run a generated API request outside MCP, set a GribStream API token:
 
 ```bash
 export GRIBSTREAM_API_TOKEN='YOUR_TOKEN_HERE'
@@ -33,7 +48,7 @@ A typical AI workflow is:
 3. Use aliases for variables that feed expressions.
 4. Build a `/timeseries` or `/runs` request.
 5. Validate the request.
-6. Run the generated `curl` command with your API token.
+6. Run the query through authenticated MCP, or run the generated `curl` command with your API token.
 
 ## Endpoint Choice
 

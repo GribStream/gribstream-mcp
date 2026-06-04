@@ -2,7 +2,7 @@
 
 These examples show the kinds of tasks the GribStream MCP server is designed to help AI tools complete.
 
-The MCP server should discover exact selectors and validate request bodies before returning final `curl` commands.
+The MCP server should discover exact selectors and validate request bodies before running live queries or returning final `curl` commands.
 
 ## GFS 2m Temperature Timeseries
 
@@ -18,7 +18,7 @@ Expected MCP workflow:
 2. Use `gribstream_get_parameter` for `TMP`.
 3. Confirm selector level `2 m above ground`.
 4. Use `gribstream_build_timeseries_request`.
-5. Return runnable `curl` with `GRIBSTREAM_API_TOKEN` placeholder.
+5. Use `gribstream_query_timeseries` to run the authenticated query, or return runnable `curl` with a `GRIBSTREAM_API_TOKEN` placeholder.
 
 Representative request body:
 
@@ -57,7 +57,7 @@ Expected MCP workflow:
 3. Use aliases such as `u10` and `v10`.
 4. Use `gribstream_get_expression_reference`.
 5. Build expression `func.Hypot(u10, v10)`.
-6. Validate before returning final `curl`.
+6. Validate before running the authenticated query or returning final `curl`.
 
 Representative expression fragment:
 

@@ -1,6 +1,6 @@
 # GribStream MCP
 
-GribStream MCP is a hosted remote Model Context Protocol server for weather forecast data. It helps AI tools discover GribStream datasets, inspect exact forecast variables and levels, validate request bodies, and generate runnable GribStream Weather API requests.
+GribStream MCP is a hosted remote Model Context Protocol server for weather forecast data. It helps AI tools discover GribStream datasets, inspect exact forecast variables and levels, validate request bodies, generate runnable GribStream Weather API requests, and run live read-only weather queries through OAuth.
 
 Endpoint: https://gribstream.com/mcp
 
@@ -14,7 +14,18 @@ OpenAPI: https://gribstream.com/docs/openapi.yaml
 
 Icon: https://gribstream.com/gribstream_small.png
 
-The hosted MCP server is read-only. It does not execute live /timeseries or /runs data queries. Generated GribStream API requests may require GRIBSTREAM_API_TOKEN when executed outside MCP.
+OAuth:
+
+- Authorization URL: https://gribstream.com/authorize
+- Token URL: https://gribstream.com/token
+- Client ID: gribstream-mcp-public
+- Client Secret: leave empty; do not enter a value
+- Scopes: leave empty
+- Resource or audience, if requested: https://gribstream.com/mcp
+- Protected resource metadata: https://gribstream.com/.well-known/oauth-protected-resource/mcp
+- Authorization server metadata: https://gribstream.com/.well-known/oauth-authorization-server
+
+The hosted MCP server uses OAuth for MCP JSON-RPC requests. During authorization, GribStream asks the user to sign in and select an active GribStream API token. The MCP client receives MCP OAuth tokens, not the raw GribStream API token. Queries are read-only and count against the selected API token quota.
 
 Key tools:
 
@@ -27,6 +38,8 @@ Key tools:
 - gribstream_get_expression_reference
 - gribstream_build_timeseries_request
 - gribstream_build_runs_request
+- gribstream_query_timeseries
+- gribstream_query_runs
 - gribstream_validate_request
 
 Prompts:

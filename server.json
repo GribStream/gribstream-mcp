@@ -2,8 +2,19 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.gribstream/mcp",
   "title": "GribStream MCP",
-  "description": "GribStream MCP lets AI agents discover weather forecast datasets, resolve exact forecast variables and levels, and build validated GribStream Weather API requests for GFS, ECMWF IFS, NBM, HRRR, and other models.",
-  "version": "1.0.0",
+  "description": "OAuth-protected weather data discovery, request validation, and live GribStream queries.",
+  "version": "1.1.0",
+  "websiteUrl": "https://gribstream.com/mcp",
+  "icons": [
+    {
+      "src": "https://gribstream.com/gribstream_small.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/GribStream/gribstream-mcp",
+    "source": "github"
+  },
   "remotes": [
     {
       "type": "streamable-http",

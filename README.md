@@ -1,8 +1,16 @@
 # GribStream MCP
 
+[![MCP Badge](https://lobehub.com/badge/mcp/gribstream-gribstream-mcp)](https://lobehub.com/mcp/gribstream-gribstream-mcp)
+
 GribStream MCP is a hosted Model Context Protocol server for weather forecast data.
 
 It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries after OAuth authorization.
+
+Official GribStream weather API homepage:
+
+```text
+https://gribstream.com/
+```
 
 Hosted MCP endpoint:
 
@@ -47,6 +55,19 @@ Generic configuration shape:
 }
 ```
 
+LobeHub quick import configuration:
+
+```json
+{
+  "mcpServers": {
+    "gribstream": {
+      "type": "http",
+      "url": "https://gribstream.com/mcp"
+    }
+  }
+}
+```
+
 Some clients require an explicit transport field:
 
 ```json
@@ -82,52 +103,61 @@ https://gribstream.com/.well-known/oauth-authorization-server
 
 The OAuth client is public and uses PKCE with `token_endpoint_auth_method` set to `none`. Native desktop clients may use loopback redirect URIs such as `http://localhost:{port}/...`, `http://127.0.0.1:{port}/...`, or `http://[::1]:{port}/...`. A setup form that requires a non-empty client secret is asking for a confidential-client flow and is not compatible with this public MCP OAuth flow.
 
-## Capabilities
+## Server Features
 
-Public read-only tools:
+LobeHub and other MCP crawlers may call MCP tools "skills". The live GribStream MCP server exposes the following skills/tools, prompts, and resources.
 
-- `gribstream_list_datasets`
-- `gribstream_get_dataset`
-- `gribstream_list_parameters`
-- `gribstream_get_parameter`
-- `gribstream_list_shared_parameters`
-- `gribstream_resolve_shared_parameter`
-- `gribstream_get_expression_reference`
-- `gribstream_build_timeseries_request`
-- `gribstream_build_runs_request`
-- `gribstream_validate_request`
+### Skill List
 
-OAuth live query tools:
+| Name | Auth | Description |
+| --- | --- | --- |
+| `gribstream_list_datasets` | No auth, public, read-only | List public GribStream datasets and metadata. |
+| `gribstream_get_dataset` | No auth, public, read-only | Get full public metadata for one dataset code. |
+| `gribstream_list_parameters` | No auth, public, read-only | List parameter summaries for one dataset. |
+| `gribstream_get_parameter` | No auth, public, read-only | Get detailed metadata and exact selector variations for one dataset parameter. |
+| `gribstream_list_shared_parameters` | No auth, public, read-only | List normalized shared parameter presets. |
+| `gribstream_resolve_shared_parameter` | No auth, public, read-only | Resolve one shared parameter preset to native variables and expressions. |
+| `gribstream_get_expression_reference` | No auth, public, read-only | Get GribStream expression-language rules, examples, and math functions. |
+| `gribstream_build_timeseries_request` | No auth, public, read-only | Build and validate a copy-pasteable authenticated `/timeseries` API request without sending it. |
+| `gribstream_build_runs_request` | No auth, public, read-only | Build and validate a copy-pasteable authenticated `/runs` API request without sending it. |
+| `gribstream_validate_request` | No auth, public, read-only | Validate request shape, selector tuples, and expression syntax without querying weather values. |
+| `gribstream_query_timeseries` | OAuth required, data query | Execute an authenticated `/timeseries` request and return actual weather values. |
+| `gribstream_query_runs` | OAuth required, data query | Execute an authenticated `/runs` request and return actual weather values across model runs. |
 
-- `gribstream_query_timeseries`
-- `gribstream_query_runs`
+Public read-only skills/tools are visible before OAuth. OAuth live query skills/tools may be hidden from `tools/list` until the client completes OAuth or sends a valid `Authorization: Bearer` token.
 
-Live query output:
+### Prompt List
 
-- CSV and NDJSON results are returned as typed inline MCP resources, not just plain prose.
+| Name | Description |
+| --- | --- |
+| `build_gribstream_api_request` | Turn a weather question into a validated GribStream `/timeseries` or `/runs` request and runnable curl. |
+| `build_gfs_forecast_request` | Create a validated GFS request for common forecast variables at points or grids. |
+| `build_historical_forecast_request` | Build a request for archived forecasts or forecasts selected by a model-run-time cutoff. |
+| `create_grid_request` | Create a GribStream request over a latitude/longitude grid instead of point coordinates. |
+| `compare_forecast_runs` | Build a `/runs` request to compare model forecasts across runs or lead times. |
+| `choose_weather_dataset` | Choose a GribStream dataset for a region, horizon, weather signal, or forecast task. |
+| `find_weather_variable` | Find the exact dataset parameter selectors for a weather signal. |
+
+### Resource List
+
+| URI | MIME Type | Description |
+| --- | --- | --- |
+| `gribstream://openapi` | `application/yaml` | Machine-readable GribStream OpenAPI specification. |
+| `gribstream://skill/gribstream-query` | `text/markdown` | Vendor-neutral behavioral instructions for AI tools using GribStream. |
+
+### Live Query Output
+
+Authenticated live query tools return CSV and NDJSON as typed inline MCP resources, not just plain prose.
+
 - `structuredContent` includes `content_type`, `rows`, `bytes`, `columns`, `schema`, `preview`, and row-ordering guidance.
 - Tabular results include `suggested_filename`, `request_hash`, `response_hash`, and `result_hash`. Use `suggested_filename` when saving multiple query results, especially for comparisons, to avoid overwriting earlier CSV or NDJSON files.
 - Rows are streamed from parallel extraction and are not guaranteed to be sorted. Sort by `forecasted_time` for `/timeseries`, and by `forecasted_at` plus `forecasted_time` for `/runs`, before plotting or comparing time series.
 
-Hosted prompts:
-
-- `build_gribstream_api_request`
-- `build_gfs_forecast_request`
-- `build_historical_forecast_request`
-- `create_grid_request`
-- `compare_forecast_runs`
-- `choose_weather_dataset`
-- `find_weather_variable`
-
-Hosted resources:
-
-- `gribstream://openapi`
-- `gribstream://skill/gribstream-query`
-
 ## Links
 
+- Official GribStream weather API homepage: `https://gribstream.com/`
 - Endpoint: `https://gribstream.com/mcp`
-- Homepage: `https://gribstream.com/mcp`
+- MCP page: `https://gribstream.com/mcp`
 - Icon: `https://gribstream.com/gribstream_small.png`
 - OpenAPI: `https://gribstream.com/docs/openapi.yaml`
 - AI setup docs: `https://gribstream.com/ai`

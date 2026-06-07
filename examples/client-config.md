@@ -6,6 +6,12 @@ Hosted MCP endpoint:
 https://gribstream.com/mcp
 ```
 
+Official GribStream weather API homepage:
+
+```text
+https://gribstream.com/
+```
+
 ## Generic Remote MCP
 
 Use this shape for clients that accept remote MCP server URLs:
@@ -14,6 +20,21 @@ Use this shape for clients that accept remote MCP server URLs:
 {
   "mcpServers": {
     "gribstream": {
+      "url": "https://gribstream.com/mcp"
+    }
+  }
+}
+```
+
+## LobeHub Quick Import
+
+Use this shape in LobeHub's JSON quick-import flow:
+
+```json
+{
+  "mcpServers": {
+    "gribstream": {
+      "type": "http",
       "url": "https://gribstream.com/mcp"
     }
   }

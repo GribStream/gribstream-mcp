@@ -2,6 +2,14 @@
 
 All notable listing and metadata changes for GribStream MCP are tracked here.
 
+## 1.1.3 - 2026-06-07
+
+- Added LobeHub-friendly Skill List, Prompt List, and Resource List tables to the README.
+- Added the LobeHub MCP badge for marketplace claim and validation workflows.
+- Added a LobeHub JSON quick-import example using its remote HTTP configuration shape.
+- Set the registry homepage URL to the main GribStream weather API landing page while keeping the remote MCP endpoint at `https://gribstream.com/mcp`.
+- Added explicit `https://gribstream.com/` homepage references to machine-readable and setup docs.
+
 ## 1.1.2 - 2026-06-04
 
 - Documented explicit tool auth labels: `NO AUTH / PUBLIC / READ-ONLY` and `AUTH REQUIRED / DATA QUERY`.

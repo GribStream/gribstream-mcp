@@ -8,6 +8,12 @@ https://gribstream.com/mcp
 
 The server uses remote MCP over Streamable HTTP.
 
+The main GribStream weather API homepage is:
+
+```text
+https://gribstream.com/
+```
+
 ## Authentication
 
 The hosted MCP endpoint allows read-only discovery, selector lookup, request building, and validation before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. Tool descriptions start with either `NO AUTH / PUBLIC / READ-ONLY` or `AUTH REQUIRED / DATA QUERY`.
@@ -85,6 +91,7 @@ Use GribStream MCP to compare recent GFS forecast runs for 2m temperature at Chi
 
 ## References
 
+- GribStream weather API homepage: https://gribstream.com/
 - GribStream MCP page: https://gribstream.com/mcp
 - GribStream AI docs: https://gribstream.com/ai
 - OpenAPI spec: https://gribstream.com/docs/openapi.yaml

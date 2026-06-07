@@ -6,7 +6,9 @@ Endpoint: https://gribstream.com/mcp
 
 Transport: Streamable HTTP
 
-Homepage: https://gribstream.com/mcp
+Official GribStream weather API homepage: https://gribstream.com/
+
+MCP page: https://gribstream.com/mcp
 
 AI docs: https://gribstream.com/ai
 
@@ -25,9 +27,20 @@ OAuth:
 - Protected resource metadata: https://gribstream.com/.well-known/oauth-protected-resource/mcp
 - Authorization server metadata: https://gribstream.com/.well-known/oauth-authorization-server
 
+LobeHub quick import JSON:
+
+{
+  "mcpServers": {
+    "gribstream": {
+      "type": "http",
+      "url": "https://gribstream.com/mcp"
+    }
+  }
+}
+
 The hosted MCP server exposes discovery, selector lookup, request-building, and validation tools before OAuth. Live /timeseries and /runs query tools require OAuth. Tool descriptions start with either "NO AUTH / PUBLIC / READ-ONLY" or "AUTH REQUIRED / DATA QUERY". During authorization, GribStream asks the user to sign in and select an active GribStream API token. The MCP client receives MCP OAuth tokens, not the raw GribStream API token. Queries are read-only and count against the selected API token quota.
 
-Public read-only tools:
+Skill List / Tools:
 
 - gribstream_list_datasets
 - gribstream_get_dataset
@@ -39,21 +52,10 @@ Public read-only tools:
 - gribstream_build_timeseries_request
 - gribstream_build_runs_request
 - gribstream_validate_request
-
-OAuth live query tools:
-
 - gribstream_query_timeseries
 - gribstream_query_runs
 
-Live query output:
-
-- CSV and NDJSON results are returned as typed inline MCP resources.
-- structuredContent includes content_type, rows, bytes, columns, schema, preview, uri, suggested_filename, request_hash, response_hash, and result_hash.
-- Use structuredContent.suggested_filename when saving multiple query results so files from different models or repeated requests do not overwrite each other.
-- Sort /timeseries rows by forecasted_time before plotting or comparing time series.
-- Sort /runs rows by forecasted_at and forecasted_time before plotting or comparing model-run history.
-
-Prompts:
+Prompt List:
 
 - build_gribstream_api_request
 - build_gfs_forecast_request
@@ -62,3 +64,16 @@ Prompts:
 - compare_forecast_runs
 - choose_weather_dataset
 - find_weather_variable
+
+Resource List:
+
+- gribstream://openapi (application/yaml)
+- gribstream://skill/gribstream-query (text/markdown)
+
+Live query output:
+
+- CSV and NDJSON results are returned as typed inline MCP resources.
+- structuredContent includes content_type, rows, bytes, columns, schema, preview, uri, suggested_filename, request_hash, response_hash, and result_hash.
+- Use structuredContent.suggested_filename when saving multiple query results so files from different models or repeated requests do not overwrite each other.
+- Sort /timeseries rows by forecasted_time before plotting or comparing time series.
+- Sort /runs rows by forecasted_at and forecasted_time before plotting or comparing model-run history.

@@ -159,3 +159,5 @@ More examples:
 - [Weather request workflows](examples/request-workflows.md)
 
 For the GribStream API itself, see the [OpenAPI specification](https://gribstream.com/docs/openapi.yaml).
+
+[![MCP Badge](https://lobehub.com/badge/mcp/gribstream-gribstream-mcp)](https://lobehub.com/mcp/gribstream-gribstream-mcp)

@@ -1,10 +1,10 @@
-# GribStream MCP
+# GribStream Weather MCP
 
 [![MCP Badge](https://lobehub.com/badge/mcp/gribstream-gribstream-mcp)](https://lobehub.com/mcp/gribstream-gribstream-mcp)
 
-GribStream MCP is a hosted Model Context Protocol server for weather forecast data.
+GribStream Weather MCP is a hosted Model Context Protocol server for AI access to weather forecast data from GribStream, including NOAA and ECMWF model output.
 
-It helps AI agents discover GribStream datasets, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries after OAuth authorization.
+It helps AI agents discover forecast datasets such as NOAA GFS, HRRR, and NBM or ECMWF IFS, resolve exact forecast variables and levels, validate request bodies, build runnable GribStream Weather API requests, and execute live read-only weather queries after OAuth authorization.
 
 Official GribStream weather API homepage:
 
@@ -23,12 +23,14 @@ https://gribstream.com/mcp
 Use GribStream MCP when you want an AI tool to:
 
 - List public GribStream weather datasets.
-- Choose a forecast model for a region, horizon, or weather task.
+- Choose a NOAA, ECMWF, or other forecast model for a region, horizon, or weather task.
+- Query GFS, HRRR, NBM, IFS, and other numerical weather prediction model data exposed by GribStream.
 - Find exact variable selectors, levels, and aliases.
 - Build a `/timeseries` request for values by valid time.
 - Build a `/runs` request to compare forecasts across model runs.
 - Validate a GribStream API request before running it.
 - Execute live `/timeseries` or `/runs` queries after OAuth authorization.
+- Retrieve dense forecast grids as downloadable files without embedding the complete result in the conversation.
 - Generate a copy-pasteable `curl` command for the GribStream Weather API.
 
 The hosted MCP server exposes discovery, selector lookup, request building, and validation tools before OAuth. Live `/timeseries` and `/runs` query tools require OAuth. Tool descriptions begin with either `NO AUTH / PUBLIC / READ-ONLY` or `AUTH REQUIRED / DATA QUERY` so AI clients can route metadata tasks and live data-query tasks correctly. When a client connects through OAuth, GribStream asks the user to sign in and select an active GribStream API token. MCP access tokens are scoped to that selected API token, and the raw API token is not shown to the MCP client.
@@ -147,10 +149,15 @@ Public read-only skills/tools are visible before OAuth. OAuth live query skills/
 
 ### Live Query Output
 
-Authenticated live query tools return CSV and NDJSON as typed inline MCP resources, not just plain prose.
+Authenticated live query tools support CSV, JSON, NDJSON, and Parquet results. Small CSV, JSON, and NDJSON results can be returned inline. Set `delivery=url` for dense grids or large results to receive a short-lived signed HTTPS `resource_link` to the complete file instead.
 
-- `structuredContent` includes `content_type`, `rows`, `bytes`, `columns`, `schema`, `preview`, and row-ordering guidance.
-- Tabular results include `suggested_filename`, `request_hash`, `response_hash`, and `result_hash`. Use `suggested_filename` when saving multiple query results, especially for comparisons, to avoid overwriting earlier CSV or NDJSON files.
+- URL delivery works with CSV, JSON, NDJSON, and Parquet. Parquet always uses URL delivery.
+- Download the exact signed URL once without an API token. This consumes the MCP result; it is not a separate direct GribStream API request.
+- The 10 MB `max_bytes` limit applies only to inline MCP results. URL artifacts use a separate server-configured size limit, so omit `max_bytes` when using `delivery=url`.
+- For dense grids, prefer Parquet when a compatible reader is already installed; otherwise use CSV with `delivery=url`. Do not install a dependency or write a Parquet parser solely for one result.
+- Use one grid request and only split after an actual request or artifact-size error. If splitting is necessary, split time first, variables second, and space last.
+- `structuredContent` includes metadata such as `content_type`, `rows`, `bytes`, `columns`, `schema`, `delivery`, `cache_hit`, `signed_url_expires_at`, and `suggested_filename` when applicable.
+- Inline tabular results also include a preview plus `request_hash`, `response_hash`, and `result_hash`. Use `suggested_filename` when saving multiple results so repeated requests or comparisons do not overwrite earlier files.
 - Rows are streamed from parallel extraction and are not guaranteed to be sorted. Sort by `forecasted_time` for `/timeseries`, and by `forecasted_at` plus `forecasted_time` for `/runs`, before plotting or comparing time series.
 
 ## Links
@@ -175,6 +182,12 @@ If your client has completed OAuth, you can also ask it to run the query:
 
 ```text
 Use GribStream MCP to run a GFS 2m temperature timeseries query for Houston for tomorrow at 12:00 UTC and return CSV.
+```
+
+For a dense-grid visualization:
+
+```text
+Using GribStream, plot the latest available ICON-D2 2 metre temperature forecast over Germany at 0.025 degree resolution as a beautiful PNG.
 ```
 
 Or:

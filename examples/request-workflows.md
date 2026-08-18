@@ -19,7 +19,7 @@ Expected MCP workflow:
 3. Confirm selector level `2 m above ground`.
 4. Use `gribstream_build_timeseries_request`.
 5. Use `gribstream_query_timeseries` to run the authenticated query, or return runnable `curl` with a `GRIBSTREAM_API_TOKEN` placeholder.
-6. If saving the MCP CSV or NDJSON result, use `structuredContent.suggested_filename` instead of a generic filename.
+6. If saving the result, use `structuredContent.suggested_filename` instead of a generic filename.
 
 Representative request body:
 
@@ -37,6 +37,7 @@ Representative request body:
     {
       "name": "TMP",
       "level": "2 m above ground",
+      "info": "",
       "alias": "temp_k"
     }
   ]
@@ -90,6 +91,24 @@ Expected MCP workflow:
 4. Explain that `/runs` is for model-run history and forecast aging workflows.
 5. When comparing saved outputs, keep each MCP result in a separate file using `structuredContent.suggested_filename`.
 6. Sort rows by `forecasted_at` and `forecasted_time` before comparing or plotting.
+
+## Dense Grid Visualization
+
+User request:
+
+```text
+Using GribStream, plot the latest available ICON-D2 2 metre temperature forecast over Germany at 0.025 degree resolution as a beautiful PNG.
+```
+
+Expected MCP workflow:
+
+1. Discover the `icond2` dataset and resolve the exact 2 metre temperature selector, including its `info` value.
+2. Use one `request.grid` at the requested resolution rather than expanding or spatially tiling it in advance.
+3. Use `delivery=url` for the dense result.
+4. Prefer Parquet only when a compatible reader is already available; otherwise use URL-delivered CSV.
+5. Download the exact signed resource link once without an API token and process the saved file locally.
+6. Do not use `resources/read`, repeat the data query merely to materialize the file, install a Parquet dependency, or write a parser for one result.
+7. Sort rows before plotting. Split by time first, variables second, and space last only after an actual API or artifact-size error.
 
 ## Choose a Dataset
 

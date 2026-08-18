@@ -2,12 +2,20 @@
 
 All notable listing and metadata changes for GribStream MCP are tracked here.
 
+## 1.1.4 - 2026-08-17
+
+- Renamed the public listing to GribStream Weather MCP and clarified its NOAA and ECMWF forecast-data coverage.
+- Documented signed URL delivery for complete CSV, JSON, NDJSON, and Parquet results.
+- Clarified that the 10 MB `max_bytes` limit applies only to inline MCP results, not URL-delivered artifacts.
+- Added dense-grid guidance: use one grid request, prefer Parquet when a compatible reader is already available, and otherwise use URL-delivered CSV.
+- Documented signed resource-link consumption, artifact metadata, and result sorting requirements for plotting and analysis.
+
 ## 1.1.3 - 2026-06-07
 
 - Added LobeHub-friendly Skill List, Prompt List, and Resource List tables to the README.
 - Added the LobeHub MCP badge for marketplace claim and validation workflows.
 - Added a LobeHub JSON quick-import example using its remote HTTP configuration shape.
-- Set the registry homepage URL to the main GribStream weather API landing page while keeping the remote MCP endpoint at `https://gribstream.com/mcp`.
+- Set the registry homepage URL to the main GribStream weather API landing page while keeping `https://gribstream.com/mcp` as the remote MCP endpoint.
 - Added explicit `https://gribstream.com/` homepage references to machine-readable and setup docs.
 
 ## 1.1.2 - 2026-06-04

@@ -72,8 +72,13 @@ Resource List:
 
 Live query output:
 
-- CSV and NDJSON results are returned as typed inline MCP resources.
-- structuredContent includes content_type, rows, bytes, columns, schema, preview, uri, suggested_filename, request_hash, response_hash, and result_hash.
-- Use structuredContent.suggested_filename when saving multiple query results so files from different models or repeated requests do not overwrite each other.
+- Live query tools support CSV, JSON, NDJSON, and Parquet.
+- Small CSV, JSON, and NDJSON results can be inline. Set delivery=url for dense grids or large results; Parquet always uses URL delivery.
+- A URL-delivered result contains a short-lived signed HTTPS resource_link. Download that exact URL once without an API token. Do not use resources/read or repeat the weather query to obtain the file.
+- The 10,000,000-byte max_bytes limit applies only to inline MCP results. Omit max_bytes with delivery=url; URL artifacts use a separate server-configured limit.
+- For dense grids, prefer application/vnd.apache.parquet only when a compatible reader is already available; otherwise use text/csv with delivery=url. Do not install a dependency or write a Parquet parser solely for one result.
+- Use one grid request. Only split after a real limit error, splitting time first, variables second, and coordinates or space last.
+- structuredContent includes result metadata such as content_type, rows, bytes, columns, schema, delivery, cache_hit, signed_url_expires_at, uri, and suggested_filename when applicable. Inline resources also include a preview, request_hash, response_hash, and result_hash.
+- Use structuredContent.suggested_filename when saving or downloading multiple query results so files from different models or repeated requests do not overwrite each other.
 - Sort /timeseries rows by forecasted_time before plotting or comparing time series.
 - Sort /runs rows by forecasted_at and forecasted_time before plotting or comparing model-run history.

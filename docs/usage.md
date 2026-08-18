@@ -54,17 +54,27 @@ A typical AI workflow is:
 3. Use aliases for variables that feed expressions.
 4. Build a `/timeseries` or `/runs` request.
 5. Validate the request.
-6. Run the query through authenticated MCP, or run the generated `curl` command with your API token.
+6. Run the query through authenticated MCP, or run the generated `curl` command with your API token. For dense grids or large results, use `delivery=url`.
+
+## Result Delivery
+
+Authenticated live query tools support CSV, JSON, NDJSON, and Parquet. Small text results may be returned inline. For dense grids or large tabular results, set `delivery=url` to receive a short-lived signed HTTPS `resource_link` to the complete file.
+
+Download the exact returned URL once with the client's normal HTTPS or file-download capability. The signed URL needs no API token: downloading it is consumption of the selected MCP result, not a separate direct GribStream API request. Do not look for an MCP `resources/read` operation or repeat the weather query merely to obtain the file bytes.
+
+The MCP `max_bytes` field controls inline results and has a 10,000,000-byte maximum. It does not limit URL-delivered artifacts. Omit `max_bytes` when using `delivery=url`; the API applies a separate server-configured artifact limit.
+
+For dense grids, use one grid request. Prefer `application/vnd.apache.parquet` when a compatible reader is already available; otherwise use `text/csv` with `delivery=url`. Do not install a Parquet dependency or write a parser solely for one response. Only split after a real request or artifact-size error, and split by time before variables and by variables before space.
+
+URL-delivered results include metadata such as `content_type`, `rows`, `bytes`, `delivery`, `cache_hit`, `generated_at`, `signed_url_expires_at`, and `suggested_filename` in `structuredContent`. Inline results include format-specific data or resources plus a short preview and identity hashes.
 
 ## Saving Query Results
-
-Authenticated live query tools return CSV and NDJSON as typed inline MCP resources. They also include metadata in `structuredContent`.
 
 When saving a live query result, use `structuredContent.suggested_filename` instead of a generic name such as `timeseries.csv` or `runs.csv`. Suggested filenames include the dataset, endpoint, request hints, and a short result hash, so repeated queries or comparisons across models do not overwrite earlier files.
 
 For comparison or plotting workflows:
 
-1. Save each MCP result with its own `suggested_filename`.
+1. Save each inline resource or download each signed resource link with its own `suggested_filename`.
 2. Sort `/timeseries` rows by `forecasted_time`.
 3. Sort `/runs` rows by `forecasted_at` and `forecasted_time`.
 4. Compare only aligned timestamps or model-run timestamps.
@@ -87,6 +97,10 @@ Use GribStream MCP to find exact ECMWF IFS 10m wind selectors for Montevideo and
 
 ```text
 Use GribStream MCP to compare recent GFS forecast runs for 2m temperature at Chicago for one valid time.
+```
+
+```text
+Using GribStream, plot the latest available ICON-D2 2 metre temperature forecast over Germany at 0.025 degree resolution as a beautiful PNG.
 ```
 
 ## References
